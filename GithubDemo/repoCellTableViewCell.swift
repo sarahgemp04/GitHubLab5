@@ -17,6 +17,7 @@ class repoCellTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var forksImgView: UIImageView!
     @IBOutlet weak var numForksLabel: UILabel!
+    
     @IBOutlet weak var starsLabel: UILabel!
     @IBOutlet weak var starImgView: UIImageView!
     @IBOutlet weak var authorLabel: UILabel!
