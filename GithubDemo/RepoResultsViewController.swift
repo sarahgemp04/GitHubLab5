@@ -42,7 +42,6 @@ class RepoResultsViewController: UIViewController, UITableViewDelegate, UITableV
         doSearch()
     }
 
-    
    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
@@ -64,10 +63,14 @@ class RepoResultsViewController: UIViewController, UITableViewDelegate, UITableV
         cell.repo = self.repos![indexPath.row]
    
         return cell
-        
-        
     }
-
+    
+    //When settings bar button pressed:
+    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let navController = segue.destination as! UINavigationController
+        let vc = navController.topViewController as! SearchSettingsViewController
+        //vc.settings =   // ... Search Settings ...
+    }
     
     // Perform the search.
     fileprivate func doSearch() {
