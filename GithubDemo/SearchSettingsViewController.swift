@@ -8,14 +8,27 @@
 
 import UIKit
 
+protocol SettingsPresentingViewControllerDelegate: class {
+    func didSaveSettings(settings: GithubRepoSearchSettings)
+    func didCancelSettings()
+}
+
 class SearchSettingsViewController: UIViewController {
 
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var sliderVal: UILabel!
+    weak var delegate: SettingsPresentingViewControllerDelegate?
+    var settings: GithubRepoSearchSettings?
+    var searchString: String?
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        if settings != nil {
+            slider.value = Float((settings?.minStars)!)
+        }
+        
         var value = slider.value
         value.round(FloatingPointRoundingRule.down)
         sliderVal.text = "\(value)"
@@ -23,7 +36,7 @@ class SearchSettingsViewController: UIViewController {
     
     @IBAction func sliderValChanged(_ sender: AnyObject) {
         var value = slider.value
-        value.round()
+        value = value.rounded()
         sliderVal.text = "\(value)"
     }
     
@@ -32,6 +45,21 @@ class SearchSettingsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @IBAction func saveClicked(_ sender: AnyObject) {
+        print(delegate)
+        
+        let settings: GithubRepoSearchSettings = GithubRepoSearchSettings(minStars: Int(slider.value), search: searchString)
+        delegate!.didSaveSettings(settings: settings)
+        self.dismiss(animated: true, completion: nil)
+        
+    }
+
+    @IBAction func cancelClicked(_ sender: AnyObject) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    
+   
 
     /*
     // MARK: - Navigation

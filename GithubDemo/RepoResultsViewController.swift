@@ -10,13 +10,13 @@ import UIKit
 import MBProgressHUD
 
 // Main ViewController
-class RepoResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class RepoResultsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, SettingsPresentingViewControllerDelegate {
 
     var searchBar: UISearchBar!
-    var searchSettings = GithubRepoSearchSettings()
+    var searchSettings = GithubRepoSearchSettings(minStars: 0, search: nil)
 
     var repos: [GithubRepo]!
-    
+
     @IBOutlet weak var tableView: UITableView!
     
     override func viewDidLoad() {
@@ -66,10 +66,17 @@ class RepoResultsViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     //When settings bar button pressed:
-    func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
         let navController = segue.destination as! UINavigationController
         let vc = navController.topViewController as! SearchSettingsViewController
-        //vc.settings =   // ... Search Settings ...
+        vc.settings = self.searchSettings
+        print(vc.settings?.minStars)
+        vc.searchString = searchBar.text
+        vc.delegate = self
+        print(vc.delegate)
     }
     
     // Perform the search.
@@ -92,7 +99,24 @@ class RepoResultsViewController: UIViewController, UITableViewDelegate, UITableV
                 print(error)
         })
     }
+    
+    func didSaveSettings(settings: GithubRepoSearchSettings) {
+        self.searchSettings = settings
+        print("Made it back to repocontroller with settings: \(settings)")
+        if(settings.searchString != nil) {
+            doSearch()
+        } else {
+            print("settings string nil")
+        }
+    }
+    
+    func didCancelSettings() {
+        //Nothing. Don't save what the user did over there.
+    }
+
 }
+
+
 
 // SearchBar methods
 extension RepoResultsViewController: UISearchBarDelegate {
@@ -115,6 +139,7 @@ extension RepoResultsViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         searchSettings.searchString = searchBar.text
         searchBar.resignFirstResponder()
+        print(searchSettings)
         doSearch()
     }
 }

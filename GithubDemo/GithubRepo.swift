@@ -54,6 +54,7 @@ class GithubRepo: CustomStringConvertible {
     // Actually fetch the list of repositories from the GitHub API.
     // Calls successCallback(...) if the request is successful
     class func fetchRepos(_ settings: GithubRepoSearchSettings, successCallback: @escaping ([GithubRepo]) -> (), error: ((Error?) -> ())?) {
+        print(settings.minStars)
         let manager = AFHTTPRequestOperationManager()
         let params = queryParamsWithSettings(settings)
 
@@ -90,6 +91,7 @@ class GithubRepo: CustomStringConvertible {
         }
         q = q + " stars:>\(settings.minStars)"
         params["q"] = q
+        print(q)
         
         params["sort"] = "stars"
         params["order"] = "desc"
